@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 @dataclass(frozen=True)
 class Cedula:
@@ -10,13 +11,11 @@ class Cedula:
 @dataclass(frozen=True)
 class Receta:
     cedula: Cedula
-    folio: int
     dias: int
     dosis: float
     riesgo: bool
 
-    def __init__(self,folio,vigenciaDias,dosis,cedula,riesgo):
-        self.folio=folio
+    def __init__(self,vigenciaDias,dosis,cedula,riesgo):
         self.vigenciaDias=vigenciaDias
         self.dosis=dosis
         self.cedula=cedula
@@ -24,9 +23,11 @@ class Receta:
 
 @dataclass(frozen=True)
 class Despacho:
-    receta: Receta
+    folio: str
     cadena: str
+    vence: datetime
 
-    def __init__(self,receta,cadena):
-        self.receta=receta
+    def __init__(self,folio,cadena,vence):
+        self.folio=folio
         self.cadena=cadena
+        self.vence=vence

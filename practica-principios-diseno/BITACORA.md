@@ -89,14 +89,26 @@ Implementé la regla de negocio en el archivo reglas.py dentro del dominio, en l
 
 **Predicción:**
 
+Al correr el experimento se encuentran dos coincidencias, mi predicción es que este dato va a bajar a 0.
+
 **Observación:**
 
 ```
+clinicasegura\legado.py:150:            paciente["data"]["attributes"]["full_name"],
+clinicasegura\legado.py:151:            paciente["data"]["attributes"]["risk_lvl"],
 ```
 
 **Explicación:**
 
+Originalmente en (legado.py:150,151) se violenta el principio de abstracción, pues la función de reporte debe conocer la estructura en la que se guardan los datos del paciente, en emitir (legado.py:57) se debe conocer la información explícita de cada cadena, esto hace que emitir no sea reutilizable para otras cadenas, y en (legado.py:154) se valida la cédula a mano en lugar de utilizar la librería re.
+
+Esto se solucionó aplicando los principios 4, 5 y 6, en este caso se crearon puertos que permiten una mejor abstracción (puestos.py), se crea un código más reutilizable al devolver un despacho a la hora de emitir(servivio.py:17) y se utiliza lo que ya existe con la librería de re en (borde.py:4) para validar la cédula.
+
+Al volver a correr el grep solo se muestran los errores que habían en el legado, lo que quiere decir que fueron solucionados con las nuevas mejoras de diseño.
+
 **Sello:**
+
+1fd8bc21d40b43b0
 
 ## Etapa 4 — Flexibilidad, obsolescencia y portabilidad
 
