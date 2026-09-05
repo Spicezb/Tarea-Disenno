@@ -38,14 +38,23 @@ c83bab6960a5d8f6
 
 **Predicción:**
 
+Por lo observado, ServicioRecetas tiene 6 funcionalidades distintas, yo considero que se podrían requerir al menos 5 archivos más.
+
 **Observación:**
 
 ```
+ServicioCitas incluye las responsabilidades de validar, escribir en la base de datos, comunicarse, calcular con las reglas de negocio, exportar datos y generar las recetas, para un total de 6 responsabilidades.
 ```
 
 **Explicación:**
 
+El principio de divide y venceras es violado en la función de emitir (legado.py:57), puesto que realiza varias responsabilidades internas que podrían ser separadas en módulos propios.
+
+El principio de alta cohesión se ve violentado en la clase ServicioRecetas (legado.py:44), pues esta clase se encarga de todo lo que hace el sistema.
+
 **Sello:**
+
+b2e524911780ffb5
 
 ## Etapa 2 — Reducir el acoplamiento
 
