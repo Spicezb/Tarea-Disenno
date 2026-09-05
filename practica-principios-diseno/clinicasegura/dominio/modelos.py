@@ -11,14 +11,16 @@ class Cedula:
 class Receta:
     cedula: Cedula
     folio: int
-    vigenciaDias: int
+    dias: int
     dosis: float
+    riesgo: bool
 
-    def __init__(self,folio,vigenciaDias,dosis,cedula):
+    def __init__(self,folio,vigenciaDias,dosis,cedula,riesgo):
         self.folio=folio
         self.vigenciaDias=vigenciaDias
         self.dosis=dosis
         self.cedula=cedula
+        self.riesgo = riesgo
 
 @dataclass(frozen=True)
 class Despacho:

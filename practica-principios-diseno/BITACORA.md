@@ -52,6 +52,10 @@ El principio de divide y venceras es violado en la función de emitir (legado.py
 
 El principio de alta cohesión se ve violentado en la clase ServicioRecetas (legado.py:44), pues esta clase se encarga de todo lo que hace el sistema.
 
+Estos problemas fueron resueltos con la separación modular del programa, esto se ve evidenciado en el archivo modelos.py y errores.py dentro de la carpeta de dominio. 
+
+Comparando con la predicción, esta fue de 5 archivos, y en realidad de momento fueron tres, no son números tan lejanos e igual es probable que se ocupen más archivos en las siguientes etapas.
+
 **Sello:**
 
 b2e524911780ffb5
@@ -60,14 +64,26 @@ b2e524911780ffb5
 
 **Predicción:**
 
+Mi predicción es que al cambiar los días de vigencia va a cambiar el comportamiento en alrededor de 2 partes del archivo, esto sería en el cálculo de la fecha de vencimiento y la emisión de la receta.
+
 **Observación:**
 
 ```
+>>> from clinicasegura.legado import CONFIG
+>>> CONFIG["vigencia_dias"] = 1            
+>>> print(CONFIG["vigencia_dias"])         
+1
 ```
 
 **Explicación:**
 
+En realidad el cambio solamente cambia el comportamiento en el cálculo de la fecha de vencimiento de la receta. (legado.py:66)
+
+Implementé la regla de negocio en el archivo reglas.py dentro del dominio, en la carpeta de configuración creé la clase de Configuracion para poder ser utilizada como argumento en lugar de variable global que significaba un acoplamiento común(configuracion.py:4), ahora la función de emitir (servicio.py:11) ya no recibe un diccionario como parámetro, sino que recibe una Receta.
+
 **Sello:**
+
+6735d185db9aec2f
 
 ## Etapa 3 — Abstracción y reuso
 
