@@ -10,14 +10,14 @@ explique por qué en la columna de hallazgo.
 
 | # | Principio | Hallazgo concreto | Evidencia (archivo:línea) | Qué cuesta si no se corrige |
 |---|-----------|-------------------|---------------------------|------------------------------|
-| 1 | Dividir y conquistar | | | |
-| 2 | Aumentar la cohesión | | | |
-| 3 | Reducir el acoplamiento | | | |
-| 4 | Mantener alta la abstracción | | | |
-| 5 | Aumentar la reusabilidad | | | |
-| 6 | Reusar lo existente | | | |
-| 7 | Diseñar para la flexibilidad | | | |
-| 8 | Anticipar la obsolescencia | | | |
-| 9 | Diseñar para la portabilidad | | | |
-| 10 | Diseñar para la testabilidad | | | |
-| 11 | Diseñar defensivamente | | | |
+| 1 | Dividir y conquistar | La función emitir realiza internamente el cálculo de la fecha de vencimiento, el folio, maneja reglas de negocio, etc. Este proceso se puede dividir en varias etapas que permitan dividir el problema en pasos específicos. | legado.py:57 | Baja la escabilidad del programa, si se requiere modificar una función, hay que modificar código que no está directamente relacionado a los cambios que se busca realizar. |
+| 2 | Aumentar la cohesión | La clase ServicioRecetas alberga muchas responsabilidades como emitir recetas, realizar validaciones de la cédula y exportar, esto rompe la cohesión del módulo. | legado.py:44 | Se vuelve difícil comprender el verdadero propósito de un módulo a la hora de revisarlo, lo que perjudica el mantenimiento del código. |
+| 3 | Reducir el acoplamiento | Existe un acoplamiento de estampado en la función de reporte, se recibe un objeto completo cuando no se utiliza en su totalidad. Se utiliza una variable global CONFIG que es utilizada en varios módulos, este es un acoplamiento común. | legado.py:146, 30 | Si un día se tiene que cambiar una clase, o un componente en concreto, también se debe cambiar todo lo que dependa directamente de ella, lo que genera un gran costo en tiempo. |
+| 4 | Mantener alta la abstracción | En la función de buscar paciente no se retornan los datos de manera abstracta, por lo que las demás funciones deben conocer la estructura del json de los pacientes para poder trabajar. La función emitir también conoce datos específicos sobre las farmacias. |  legado.py:137, 57 | Las funciones que depentan de implementaciones no abstractas deberán ser modificadas en caso de requerir cambiar estructuras específicas como el json de los pacientes. |
+| 5 | Aumentar la reusabilidad | La reusabilidad no es posible por ejemplo en la función de exportar, ya que depende de una ruta concreta y específica en lugar de una relativa que permita una fácil adaptación. | legado.py:169 | Hacer código no reutilizable implica tener que repetir código con cambios mínimos para realizar procesos muy similares que podrían ser abarcados dentro de una misma función. |
+| 6 | Reusar lo existente | En la función de validar cédula, esta se valida poco a poco de una forma innecesaria, ya que en python existe la librería de expresiones regulares que permite realizar validaciones de forma sencilla. | legado.py:154 | Si no se utiliza el código ya existente, se produce un aumento en la cantidad de código, lo que dificulta el mantenimiento y facilita la existencia de errores dentro del programa. |
+| 7 | Diseñar para la flexibilidad | En la función de emitir se trabaja directamente con los datos de las farmacias, si quisieramos agregar otra habría que modificar la función de emitir. | legado.py:79 | El sistema no permite evolución, ya que queda ligado a las decisiones o implementaciones planteadas desde un inicio. |
+| 8 | Anticipar la obsolescencia | La función de post depende directamente de urllib, lo que hace que si esta dependecia deja de funcionar, entonces se tenga que modificar el código interno en varios lugares. | legado.py:119 | Si una dependencia se cae o es descontinuada, el sistema puede quedar paralizado por cierto tiempo. |
+| 9 | Diseñar para la portabilidad | En la función de exportar, se utiliza una ruta de windows, esto dificulta la portabilidad hacia otros sistemas operativos. | legado.py:169 | Si intentamos exportar este sistema hacia otro entorno, esto va a requerir un gran trabajo adicional. |
+| 10 | Diseñar para la testabilidad | En emitir se realiza internamente el cálculo de la fecha de vencimiento, esto dificula realizar pruebas en cuanto a fechas hipotéticas. | legado.py:66 | Al no poder hacerse las pruebas necesarias, hay una mayor probabilidad de errores a futuro. |
+| 11 | Diseñar defensivamente | En la función de emitir cuando se produce un error al guardar en la base de datos, el programa simplemente lo ignora y con esto se pierde información. | legado.py:104 | Los errores pasan desapercibidos y se puede perder información importante, esto a causa de asumir resultados correctos. |
