@@ -161,7 +161,11 @@ En el código además se puede observar como el servicio depende de la base de d
 
 **Explicación:**
 
+Antes en la función de emitir (legado.py:66,69,) se dependía de cosas reales como el reloj, la base de datos, la aleatoriedad y demás, esto hacía difícil aplicar pruebas, en el nuevo diseño las pruebas sobre el servicio se pueden aplicar fácilmente con casos específicos que no dependen de las condiciones de la red o el reloj en tiempo real (servicio.py:14,20).
+
 **Sello:**
+
+c87808d0689c12e8
 
 ## Etapa 6 — Diseño defensivo
 

@@ -18,6 +18,7 @@ class EmisionDeRecetas:
         self.pasarelas = pasarelas
 
     def emitir(self, receta: Receta, cadena:str) -> Despacho:
+        validar_receta(receta)
         pasarela=self.pasarelas.get(cadena)
         if pasarela==None:
             raise CadenaNoSoportada(cadena)
