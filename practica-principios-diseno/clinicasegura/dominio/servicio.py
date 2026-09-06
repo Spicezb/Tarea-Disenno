@@ -17,13 +17,17 @@ class EmisionDeRecetas:
         self.bitacora = bitacora
         self.pasarelas = pasarelas
 
-    def emitir(self, receta: Receta, cadena:str) -> Despacho:
+    def emitir(self, receta: Receta, cadena: str) -> Despacho:
         validar_receta(receta)
-        pasarela=self.pasarelas.get(cadena)
-        if pasarela==None:
+        pasarela = self.pasarelas.get(cadena)
+        if pasarela is None:
             raise CadenaNoSoportada(cadena)
         folio = self.folios.siguiente()
         vence = self.reloj.ahora() + timedelta(days=receta.dias)
-        despacho = pasarela.enviar(receta, folio, vence)
+        try:
+            despacho = pasarela.enviar(receta, folio, vence)
+        except TimeoutError as e:
+            self.bitacora.registrar("error_farmacia", folio)
+            raise FarmaciaNoDisponible(cadena) from e
         self.bitacora.registrar("emitida", despacho.folio)
         return despacho

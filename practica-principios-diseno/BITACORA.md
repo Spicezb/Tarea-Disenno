@@ -28,7 +28,7 @@ Se observa gran cantidad de violaciones a los principios, en efecto los 11 se en
 
 **Explicación:**
 
-Se encontraron errores graves en las funciones del archivo legado.py que incumplen con los 11 principios de diseño ideales, estos errores de diseño son perjudiciales para la escabilidad y mantenimiento del software. Las violaciones a los principios fueron detalladas en el archivo de diagnóstico.
+Se encontraron errores graves en las funciones del archivo (legado.py:66,69,169,150,151) que incumplen con los 11 principios de diseño ideales, estos errores de diseño son perjudiciales para la escabilidad y mantenimiento del software. Las violaciones a los principios fueron detalladas en el archivo de diagnóstico.
 
 **Sello:**
 
@@ -171,14 +171,46 @@ c87808d0689c12e8
 
 **Predicción:**
 
+Mi predicción es que en la segunda ejecución con -O no se van a validar los asserts, por lo que los errores van a persistir.
+
 **Observación:**
 
 ```
+>>> from clinicasegura.legado import ServicioRecetas
+>>> 
+>>> servicio = ServicioRecetas()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Users\Xavier\OneDrive\Desktop\TEC\IIS2026\Diseño\Tarea-Disenno\practica-principios-diseno\clinicasegura\legado.py", line 50, in __init__
+    self.db = sqlite3.connect(os.path.join("/tmp", "clinicasegura.db"))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: unable to open database file
+>>> 
+>>> datos = {
+...     "cedula": "1-1234-5678",
+...     "dias": 0,
+...     "dosis_mg": 500,
+... }
+>>> 
+>>> servicio.emitir(datos, "farmauno")
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+NameError: name 'servicio' is not defined
+
+Me vuelve a salir lo mismo porque (legado.py:50) no me permite abrir la base de datos.
+
+Lo que pasaría es que al usar -O no se aplican los asserts y se mantienen los errores.
 ```
 
 **Explicación:**
 
+Antes el servicio hacía validaciones internas que mezclaban dos partes que en realidad no deberían mezclarse (legado.py:62), ahora las validaciones se hacen en la capa de borde (borde.py:11,30).
+
+Anteriormente los errores podían viajar directamente, eso se soluciona ahora con errores propios del dominio(servicio.py:31)
+
 **Sello:**
+
+faf0f43390bb0fc4
 
 ## Cierre — Los principios en conflicto
 
@@ -187,4 +219,8 @@ criterio resolvió el conflicto. Cite el archivo donde se ve la decisión.
 
 **Conflicto 1:**
 
+Principios 3 y 11: Se buscaba que el sistema no dependiera directamente de los datos externos, pero también había que validarlos antes de usarlos. Se resolvió poniendo la validación en (borde.py) y convirtiendo los datos válidos en una Receta.
+
 **Conflicto 2:**
+
+Principios 7 y 11: Es necesario poder agregar nuevas farmacias sin cambiar el servicio, pero también es necesario manejar los errores de las farmacias correctamente. Se resolvió usando las pasarelas y haciendo que los errores de conexión se conviertan en FarmaciaNoDisponible y se registren en la bitácora, esto se puede ver en el archivo (servicio.py).
