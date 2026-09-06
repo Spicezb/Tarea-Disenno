@@ -3,8 +3,9 @@ from datetime import datetime
 from .modelos import *
 
 class Pasarela(Protocol):
+    cadena: str
 
-    def enviar(self, receta:Receta) -> int:
+    def enviar(self, receta:Receta, folio:str, vence:datetime) -> Despacho:
         ...
 
 class Reloj(Protocol):

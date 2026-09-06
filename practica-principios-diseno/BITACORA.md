@@ -114,22 +114,49 @@ Al volver a correr el grep solo se muestran los errores que habían en el legado
 
 **Predicción:**
 
+Mi predicción en esta etapa es que al agregar la nueva cadena el legado va a fallar puesto que utiliza ifs para construir la respuesta de cada cadena, en cambio, después de realizar las modificaciones de la etapa, este fallo no sucedería.
+
 **Observación:**
 
 ```
+No se puede correr directamente el código de legado en windows porque usa rutas imcompatibles con el entorno (legado.py:50), pero siguiendo el código de emitir, fallaría, pues utiliza condicionales que comparan explícitamente con los nombre de las farmacias.
 ```
 
 **Explicación:**
 
+Al final del test se pasan todas las pruebas, por lo que ahora se pueden agregar cadenas sin problema y sin tener que modificar el código del servicio.
+
+Antes en la función de emitir se utilizaban los datos directos de las farmacias (legado.py:79), ahora hay flexibilidad porque se pueden agregar nuevas cadenas fácilmente y el servicio no depende de cadenas específicas como lo hacía anteriormente.
+
+Antes se utilizaban dependencias pero no se sabía nada en específico sobre estas, ni ningún plan en caso de que fallaran, ahora en el archivo (DEPENDENCIAS.md) se encuentran detalladas para procurar un mejor mantenimiento del código en caso de que alguna falle.
+
+Anteriormente las rutas que utilizaba el sistema se encontraban directamente en el servicio, lo que imposibilitaba la portabilidad (legado.py:169,50), ahora el servicio ya no depende de estas, sino que funciona de manera general y no está ligado a un solo ambiente.
+
 **Sello:**
+
+025f11d9d2a2ea7b
 
 ## Etapa 5 — Testabilidad
 
 **Predicción:**
 
+Mi predicción es que en el legado no se van a poder realizar correctamente las pruebas, ya que depende de varias cosas reales como el reloj del sistema, la base de datos, la red, etc. Esto hace que el software no se pueda probar adecuadamente.
+
 **Observación:**
 
 ```
+>>> from clinicasegura.legado import ServicioRecetas
+>>> servicio = ServicioRecetas()
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+  File "C:\Users\Xavier\OneDrive\Desktop\TEC\IIS2026\Diseño\Tarea-Disenno\practica-principios-diseno\clinicasegura\legado.py", line 50, in __init__
+    self.db = sqlite3.connect(os.path.join("/tmp", "clinicasegura.db"))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: unable to open database file
+
+La prueba falla porque el servicio depende internamente de la base de datos.
+
+En el código además se puede observar como el servicio depende de la base de datos, la aleatoriedad, el reloj real, la red y de variables globales.
 ```
 
 **Explicación:**

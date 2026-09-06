@@ -6,6 +6,6 @@ dependencia es un compromiso indefinido.
 
 | Dependencia | Versión acotada | Licencia | Riesgo | Ruta de salida |
 |-------------|-----------------|----------|--------|----------------|
-| pytest | | | | |
-| pydantic | | | | |
-| | | | | |
+| pytest | 9.1.1 | MIT | Bajo | Utilizar unittest |
+| pydantic | 2.13.5 | MIT | Medio | Reemplazar por dataclasses |
+| python | 3.11.9 | PSFL | Bajo | Utilizar una versión más reciente |
